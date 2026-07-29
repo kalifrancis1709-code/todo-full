@@ -1,29 +1,123 @@
-import { useState } from "react";
+// import { useState } from "react";
 
+<<<<<<< HEAD
+=======
+// interface Tache {
+//   id: number;
+//   titre: string;
+// }
+
+// export default function App() {
+//   const [taches, setTaches] = useState<Tache[]>([]);
+//   const [texte, setTexte] = useState("");
+//   const [health, setHealth] = useState<string | null>("");
+
+//   function ajouter() {
+//     if (texte.trim() === "") return;
+//     setTaches([...taches, { id: Date.now(), titre: texte }]);
+//     setTexte("");
+//   }
+
+//   function suppr(id: number) {
+//     setTaches(taches.filter((t) => t.id !== id));
+//   }
+
+//   function init() {
+//     fetch("http://localhost:3000/health")
+//       .then((res) => res.json())
+//       .then((data) => setHealth(data))
+//       .catch((err) => setHealth(err.message || "Erreur de connexion"));
+//   }
+
+//   init();
+
+//   return (
+//     <div>
+//       <h1>Gestion des tâches</h1>
+//       <p>{health}</p>
+//       <input value={texte} onChange={(e) => setTexte(e.target.value)} />
+//       <button onClick={() => ajouter()}>Ajouter</button>
+
+//       <ul>
+//         {taches.map((t) => (
+//           <li key={t.id}>
+//             {t.titre}
+//             <button onClick={() => suppr(t.id)}>X</button>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// }
+
+import { useEffect, useState } from "react";
+
+>>>>>>> main
 interface Tache {
   id: number;
   titre: string;
 }
+<<<<<<< HEAD
 
 // etat: "Encours"
 // etat: string
+=======
+>>>>>>> main
 
 export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
+<<<<<<< HEAD
   const [health, setHealth] = useState<string | null>("");
   // let index = 0;
+=======
+  const [health, setHealth] = useState("");
+
+  function init() {
+    fetch("http://localhost:3000/health")
+      .then((res) => res.json())
+      .then((data) => setHealth(data))
+      .catch((err) => setHealth(err.message || "Erreur de connexion"));
+    refresh();
+  }
+
+  function refresh() {
+    fetch("http://localhost:3000/taches")
+      .then((res) => res.json())
+      .then((data) => setTaches(data))
+      .catch((err) => console.error(err));
+  }
+>>>>>>> main
 
   function ajouter() {
     if (texte.trim() === "") return;
-    setTaches([...taches, { id: Date.now(), titre: texte }]);
-    setTexte("");
+
+    fetch("http://localhost:3000/taches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        titre: texte,
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setTexte("");
+        refresh();
+      })
+      .catch((err) => console.error(err));
   }
 
-  function suppr(id: number) {
-    setTaches(taches.filter((t) => t.id !== id));
+  function supprimer(id: number) {
+    fetch(`http://localhost:3000/taches/${id}`, {
+      method: "DELETE",
+    })
+      .then(() => refresh())
+      .catch((err) => console.error(err));
   }
 
+<<<<<<< HEAD
   function init() {
     fetch("http://localhost:3000/health")
       .then((res) => res.json())
@@ -40,19 +134,38 @@ export default function App() {
   }
 
   init();
+=======
+  useEffect(() => {
+    init();
+    refresh();
+  }, []);
+>>>>>>> main
 
   return (
     <div>
       <h1>Gestion des tâches</h1>
+<<<<<<< HEAD
       <p>{health}</p>
       <input value={texte} onChange={(e) => setTexte(e.target.value)} />
       <button onClick={() => ajouter()}>Ajouter</button>
+=======
+
+      <p>{health}</p>
+
+      <input
+        type="text"
+        value={texte}
+        onChange={(e) => setTexte(e.target.value)}
+      />
+
+      <button onClick={ajouter}>Ajouter</button>
+>>>>>>> main
 
       <ul>
         {taches.map((t) => (
           <li key={t.id}>
             {t.titre}
-            <button onClick={() => suppr(t.id)}>X</button>
+            <button onClick={() => supprimer(t.id)}>X</button>
           </li>
         ))}
       </ul>
