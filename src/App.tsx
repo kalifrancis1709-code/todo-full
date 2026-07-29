@@ -1,54 +1,4 @@
-// import { useState } from "react";
-
-// interface Tache {
-//   id: number;
-//   titre: string;
-// }
-
-// export default function App() {
-//   const [taches, setTaches] = useState<Tache[]>([]);
-//   const [texte, setTexte] = useState("");
-//   const [health, setHealth] = useState<string | null>("");
-
-//   function ajouter() {
-//     if (texte.trim() === "") return;
-//     setTaches([...taches, { id: Date.now(), titre: texte }]);
-//     setTexte("");
-//   }
-
-//   function suppr(id: number) {
-//     setTaches(taches.filter((t) => t.id !== id));
-//   }
-
-//   function init() {
-//     fetch("http://localhost:3000/health")
-//       .then((res) => res.json())
-//       .then((data) => setHealth(data))
-//       .catch((err) => setHealth(err.message || "Erreur de connexion"));
-//   }
-
-//   init();
-
-//   return (
-//     <div>
-//       <h1>Gestion des tâches</h1>
-//       <p>{health}</p>
-//       <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-//       <button onClick={() => ajouter()}>Ajouter</button>
-
-//       <ul>
-//         {taches.map((t) => (
-//           <li key={t.id}>
-//             {t.titre}
-//             <button onClick={() => suppr(t.id)}>X</button>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Tache {
   id: number;
@@ -58,22 +8,8 @@ interface Tache {
 export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
-  const [health, setHealth] = useState("");
-
-  function init() {
-    fetch("http://localhost:3000/health")
-      .then((res) => res.json())
-      .then((data) => setHealth(data))
-      .catch((err) => setHealth(err.message || "Erreur de connexion"));
-    refresh();
-  }
-
-  function refresh() {
-    fetch("http://localhost:3000/taches")
-      .then((res) => res.json())
-      .then((data) => setTaches(data))
-      .catch((err) => console.error(err));
-  }
+  const [health, setHealth] = useState<string | null>("");
+  // let index = 0;
 
   function ajouter() {
     if (texte.trim() === "") return;
@@ -103,24 +39,29 @@ export default function App() {
       .catch((err) => console.error(err));
   }
 
-  useEffect(() => {
-    init();
+  function init() {
+    fetch("http://localhost:3000/health")
+      .then((res) => res.json())
+      .then((data) => setHealth(data))
+      .catch((err) => console.error(err));
+
     refresh();
-  }, []);
+  }
+
+  function refresh() {
+    fetch("http://localhost:3000/taches")
+      .then((res) => res.json())
+      .then((data) => setTaches(data));
+  }
+
+  init();
 
   return (
     <div>
       <h1>Gestion des tâches</h1>
-
       <p>{health}</p>
-
-      <input
-        type="text"
-        value={texte}
-        onChange={(e) => setTexte(e.target.value)}
-      />
-
-      <button onClick={ajouter}>Ajouter</button>
+      <input value={texte} onChange={(e) => setTexte(e.target.value)} />
+      <button onClick={() => ajouter()}>Ajouter</button>
 
       <ul>
         {taches.map((t) => (
