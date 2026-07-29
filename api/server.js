@@ -25,7 +25,7 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 
-let taches = [];
+let taches = [{ id: 1, titre: "Taches de test" }];
 
 app.get("/health", async (req, res) => {
   res.json("le serveur est up!");

@@ -65,6 +65,7 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setHealth(data))
       .catch((err) => setHealth(err.message || "Erreur de connexion"));
+    refresh();
   }
 
   function refresh() {
@@ -72,8 +73,6 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setTaches(data))
       .catch((err) => console.error(err));
-
-    refresh();
   }
 
   function ajouter() {
