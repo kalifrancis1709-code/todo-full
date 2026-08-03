@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Tache {
   id: number;
@@ -8,8 +8,23 @@ interface Tache {
 export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
-  const [health, setHealth] = useState<string | null>("");
-  // let index = 0;
+  const [health, setHealth] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState("");
+
+  function init() {
+    fetch("http://localhost:3000/health")
+      .then((res) => res.json())
+      .then((data) => setHealth(data))
+      .catch((err) => setHealth(err.message || "Erreur de connexion"));
+  }
+
+  function refresh() {
+    fetch("http://localhost:3000/taches")
+      .then((res) => res.json())
+      .then((data) => setTaches(data))
+      .catch((err) => console.error(err));
+  }
 
   function ajouter() {
     if (texte.trim() === "") return;
@@ -39,35 +54,84 @@ export default function App() {
       .catch((err) => console.error(err));
   }
 
-  function init() {
-    fetch("http://localhost:3000/health")
+  function modifier(): void {
+    fetch(`http://localhost:3000/taches/${editingId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ titre: editingText }),
+    })
       .then((res) => res.json())
-      .then((data) => setHealth(data))
+      .then(() => {
+        setEditingId(null);
+        setEditingText("");
+        refresh();
+      })
       .catch((err) => console.error(err));
+  }
 
+  useEffect(() => {
+    init();
     refresh();
-  }
-
-  function refresh() {
-    fetch("http://localhost:3000/taches")
-      .then((res) => res.json())
-      .then((data) => setTaches(data));
-  }
-
-  init();
+  }, []);
 
   return (
     <div>
       <h1>Gestion des tâches</h1>
+
       <p>{health}</p>
-      <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-      <button onClick={() => ajouter()}>Ajouter</button>
+
+      <input
+        type="text"
+        value={texte}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setTexte(e.target.value)
+        }
+      />
+
+      <button onClick={ajouter}>Ajouter</button>
 
       <ul>
-        {taches.map((t) => (
+        {taches.map((t: Tache) => (
           <li key={t.id}>
-            {t.titre}
-            <button onClick={() => supprimer(t.id)}>X</button>
+            {editingId === t.id ? (
+              <>
+                <input
+                  type="text"
+                  value={editingText}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEditingText(e.target.value)
+                  }
+                />
+
+                <button onClick={modifier}>Enregistrer</button>
+
+                <button
+                  onClick={() => {
+                    setEditingId(null);
+                    setEditingText("");
+                  }}
+                >
+                  Annuler
+                </button>
+              </>
+            ) : (
+              <>
+                {t.titre}
+
+                <button
+                  onClick={() => {
+                    setEditingId(t.id);
+                    setEditingText(t.titre);
+                  }}
+                >
+                  Modifier
+                </button>
+
+                <button onClick={() => supprimer(t.id)}>X</button>
+              </>
+            )}
           </li>
         ))}
       </ul>
