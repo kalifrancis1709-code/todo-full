@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Tache {
   id: number;
@@ -9,26 +9,45 @@ export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
   const [health, setHealth] = useState<string | null>("");
-  // let index = 0;
-
+  const [editId, setEditId] = useState<number | null>(null);
   function ajouter() {
     if (texte.trim() === "") return;
 
-    fetch("http://localhost:3000/taches", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        titre: texte,
-      }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setTexte("");
-        refresh();
+    if (editId) {
+      // Mode modification → PUT
+      fetch(`http://localhost:3000/taches/${editId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titre: texte }),
       })
-      .catch((err) => console.error(err));
+        .then((res) => res.json())
+        .then(() => {
+          setTexte("");
+          setEditId(null); // on repasse en mode "Ajouter"
+         refresh();
+        })
+        .catch((err) => console.error(err));
+    } else {
+      // Mode création → POST
+      fetch("http://localhost:3000/taches", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titre: texte }),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          setTexte("");
+          refresh();
+        })
+        .catch((err) => console.error(err));
+    }
+  }
+
+  function modifier(id: number) {
+    const tache = taches.find((t) => t.id === id);
+    if (!tache) return;
+    setTexte(tache.titre);
+    setEditId(id);
   }
 
   function supprimer(id: number) {
@@ -44,9 +63,12 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setHealth(data))
       .catch((err) => console.error(err));
-
     refresh();
   }
+
+   useEffect(() => {
+    init();
+  }, []); 
 
   function refresh() {
     fetch("http://localhost:3000/taches")
@@ -54,19 +76,17 @@ export default function App() {
       .then((data) => setTaches(data));
   }
 
-  init();
-
   return (
     <div>
       <h1>Gestion des tâches</h1>
       <p>{health}</p>
       <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-      <button onClick={() => ajouter()}>Ajouter</button>
-
+      <button onClick={() => ajouter()}>{editId ? "Valider" : "Ajouter"}</button>
       <ul>
         {taches.map((t) => (
           <li key={t.id}>
             {t.titre}
+            <button onClick={() => modifier(t.id)}>modifier</button>
             <button onClick={() => supprimer(t.id)}>X</button>
           </li>
         ))}
