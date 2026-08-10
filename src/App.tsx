@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 interface Tache {
   id: number;
-  titre: string;
+  designation: string;
 }
 
 export default function App() {
@@ -10,8 +10,15 @@ export default function App() {
   const [texte, setTexte] = useState("");
   const [health, setHealth] = useState<string | null>("");
   const [editId, setEditId] = useState<number | null>(null);
+
+  function refresh() {
+    fetch("http://localhost:3000/taches")
+      .then((res) => res.json())
+      .then((data) => setTaches(data));
+  }
+
   function ajouter() {
-    if (texte.trim() === "") return;
+    // if (texte.trim() === "") return;
 
     if (editId) {
       // Mode modification → PUT
@@ -24,7 +31,7 @@ export default function App() {
         .then(() => {
           setTexte("");
           setEditId(null); // on repasse en mode "Ajouter"
-         refresh();
+          refresh();
         })
         .catch((err) => console.error(err));
     } else {
@@ -32,22 +39,29 @@ export default function App() {
       fetch("http://localhost:3000/taches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titre: texte }),
+        body: JSON.stringify({ id: 3, titre: texte }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            res.json().then((data) => {
+              alert("Erreur: " + data.message);
+            });
+          }
+          return res.json();
+        })
         .then(() => {
           setTexte("");
           refresh();
-        })
-        .catch((err) => console.error(err));
+        });
     }
   }
 
-  function modifier(id: number) {
-    const tache = taches.find((t) => t.id === id);
-    if (!tache) return;
-    setTexte(tache.titre);
-    setEditId(id);
+  function modifier(idRecu: number) {
+    const tacheAModifier = taches.find((t) => t.id === idRecu);
+
+    if (!tacheAModifier) return;
+    setTexte(tacheAModifier.designation);
+    setEditId(idRecu);
   }
 
   function supprimer(id: number) {
@@ -63,29 +77,26 @@ export default function App() {
       .then((res) => res.json())
       .then((data) => setHealth(data))
       .catch((err) => console.error(err));
-    refresh();
+
+    refresh(); //TODO: à revoir
   }
 
-   useEffect(() => {
+  useEffect(() => {
     init();
-  }, []); 
-
-  function refresh() {
-    fetch("http://localhost:3000/taches")
-      .then((res) => res.json())
-      .then((data) => setTaches(data));
-  }
+  }, []);
 
   return (
     <div>
       <h1>Gestion des tâches</h1>
       <p>{health}</p>
       <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-      <button onClick={() => ajouter()}>{editId ? "Valider" : "Ajouter"}</button>
+      <button onClick={() => ajouter()}>
+        {editId ? "Valider" : "Ajouter"}
+      </button>
       <ul>
         {taches.map((t) => (
           <li key={t.id}>
-            {t.titre}
+            {t.designation}
             <button onClick={() => modifier(t.id)}>modifier</button>
             <button onClick={() => supprimer(t.id)}>X</button>
           </li>
