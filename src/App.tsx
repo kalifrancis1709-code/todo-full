@@ -1,77 +1,65 @@
-<<<<<<< HEAD
-import { useEffect, useState } from "react";
-=======
-import React, { useState, useEffect } from "react";
->>>>>>> main
+import { useState, useEffect } from "react";
 
 interface Tache {
   id: number;
-  titre: string;
+  designation: string;
 }
 
 export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
-<<<<<<< HEAD
-  const [health, setHealth] = useState("");
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingText, setEditingText] = useState("");
-
-  function init() {
-    fetch("http://localhost:3000/health")
-      .then((res) => res.json())
-      .then((data) => setHealth(data))
-      .catch((err) => setHealth(err.message || "Erreur de connexion"));
-  }
+  const [health, setHealth] = useState<string | null>("");
+  const [editId, setEditId] = useState<number | null>(null);
 
   function refresh() {
     fetch("http://localhost:3000/taches")
       .then((res) => res.json())
-      .then((data) => setTaches(data))
-      .catch((err) => console.error(err));
+      .then((data) => setTaches(data));
   }
 
-=======
-  const [health, setHealth] = useState<string | null>("");
-  const [editId, setEditId] = useState<number | null>(null);
->>>>>>> main
   function ajouter() {
-    if (texte.trim() === "") return;
+    // if (texte.trim() === "") return;
 
     if (editId) {
       // Mode modification → PUT
       fetch(`http://localhost:3000/taches/${editId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titre: texte }),
+        body: JSON.stringify({ designation: texte }),
       })
         .then((res) => res.json())
         .then(() => {
           setTexte("");
           setEditId(null); // on repasse en mode "Ajouter"
-         refresh();
+          refresh();
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err.message));
     } else {
       // Mode création → POST
       fetch("http://localhost:3000/taches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titre: texte }),
+        body: JSON.stringify({ designation: texte }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            return res.json().then((data) => {
+              alert("Erreur: " + data.message);
+            });
+          }
+          return res.json();
+        })
         .then(() => {
           setTexte("");
           refresh();
-        })
-        .catch((err) => console.error(err));
+        });
     }
   }
 
   function modifier(id: number) {
-    const tache = taches.find((t) => t.id === id);
-    if (!tache) return;
-    setTexte(tache.titre);
+    const tacheAModifier = taches.find((t) => t.id === id);
+    if (!tacheAModifier) return;
+    setTexte(tacheAModifier.designation);
     setEditId(id);
   }
 
@@ -83,110 +71,34 @@ export default function App() {
       .catch((err) => console.error(err));
   }
 
-  function modifier(): void {
-    fetch(`http://localhost:3000/taches/${editingId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ titre: editingText }),
-    })
+  function init() {
+    fetch("http://localhost:3000/health")
       .then((res) => res.json())
-      .then(() => {
-        setEditingId(null);
-        setEditingText("");
-        refresh();
-      })
+      .then((data) => setHealth(data))
       .catch((err) => console.error(err));
-<<<<<<< HEAD
+
+    refresh(); // TODO: à revoir
   }
 
   useEffect(() => {
     init();
-    refresh();
   }, []);
-=======
-    refresh();
-  }
-
-   useEffect(() => {
-    init();
-  }, []); 
-
-  function refresh() {
-    fetch("http://localhost:3000/taches")
-      .then((res) => res.json())
-      .then((data) => setTaches(data));
-  }
->>>>>>> main
 
   return (
     <div>
       <h1>Gestion des tâches</h1>
 
       <p>{health}</p>
-<<<<<<< HEAD
-
-      <input
-        type="text"
-        value={texte}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setTexte(e.target.value)
-        }
-      />
-
-      <button onClick={ajouter}>Ajouter</button>
-
-=======
       <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-      <button onClick={() => ajouter()}>{editId ? "Valider" : "Ajouter"}</button>
->>>>>>> main
+      <button onClick={() => ajouter()}>
+        {editId ? "Valider" : "Ajouter"}
+      </button>
       <ul>
         {taches.map((t: Tache) => (
           <li key={t.id}>
-<<<<<<< HEAD
-            {editingId === t.id ? (
-              <>
-                <input
-                  type="text"
-                  value={editingText}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEditingText(e.target.value)
-                  }
-                />
-
-                <button onClick={modifier}>Enregistrer</button>
-
-                <button
-                  onClick={() => {
-                    setEditingId(null);
-                    setEditingText("");
-                  }}
-                >
-                  Annuler
-                </button>
-              </>
-            ) : (
-              <>
-                {t.titre}
-
-                <button
-                  onClick={() => {
-                    setEditingId(t.id);
-                    setEditingText(t.titre);
-                  }}
-                >
-                  Modifier
-                </button>
-
-                <button onClick={() => supprimer(t.id)}>X</button>
-              </>
-            )}
-=======
-            {t.titre}
+            {t.designation}
             <button onClick={() => modifier(t.id)}>modifier</button>
             <button onClick={() => supprimer(t.id)}>X</button>
->>>>>>> main
           </li>
         ))}
       </ul>
