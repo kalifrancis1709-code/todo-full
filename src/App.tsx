@@ -47,7 +47,7 @@ export default function App() {
             alert( "Erreur: " + data.message);
           });
         }
-          return res.json();
+          return res.json( );
         })
         .then(() => {
           setTexte("");
