@@ -43,7 +43,7 @@ export default function App() {
       })
         .then((res) => {
           if (!res.ok) {
-            return res.json().then((data) => {
+            res.json().then((data) => {
               alert("Erreur: " + data.message);
             });
           }

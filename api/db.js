@@ -10,7 +10,7 @@ const pool = new Pool({
 });
 
 pool.on("connect", () => {
-  console.log("Connexion à la base de données réussie !");
+  console.log("Connected to the database");
 });
 
 pool.on("error", (err) => {
