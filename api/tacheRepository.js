@@ -11,7 +11,8 @@ router.get("/", (req, res) => {
 
 // Ajouter une tâche
 router.post("/", (req, res) => {
-  const { titre: designation } = req.body;
+  console.log(req.body);
+  const { designation: designation } = req.body;
 
   if (!designation || designation.trim() === "") {
     return res.status(400).json({
@@ -19,48 +20,46 @@ router.post("/", (req, res) => {
     });
   }
 
-  const nouvelleTache = {
-    id: prochainId++,
-    designation: designation,
-  };
+  query("INSERT INTO taches (designation) VALUES ($1)", [designation]).then(
+    (result) => {
+      res.json(result.rows);
+    },
+  );
 
-  taches.push(nouvelleTache);
-
-  res.status(201).json(nouvelleTache);
+  // res.status(201).json({
+  //   message: "Tâche à été ajoutée",
+  // });
 });
 
 // Modifier une tâche existante
 router.put("/:id", (req, res) => {
   const id = Number(req.params.id);
-  const { titre } = req.body;
+  const { designation } = req.body;
 
-  if (!titre || titre.trim() === "") {
+  if (!designation || designation.trim() === "") {
     return res.status(400).json({
-      message: "Le titre est obligatoire",
+      message: "La designation est obligatoire",
     });
   }
 
-  const tache = taches.find((t) => t.id === id);
-
-  if (!tache) {
-    return res.status(404).json({
-      message: "Tâche non trouvée",
+  query("UPDATE taches SET designation = $1 WHERE id = $2", [
+    designation,
+    id,
+  ]).then((result) => {
+    res.json({
+      message: "Tâche à été modifiée",
     });
-  }
-
-  tache.titre = titre;
-
-  res.json(tache);
+  });
 });
 
 // Supprimer une tâche
 router.delete("/:id", (req, res) => {
   const id = Number(req.params.id);
 
-  taches = taches.filter((t) => t.id !== id);
-
-  res.json({
-    message: "Tâche à été supprimée",
+  query("DELETE FROM taches WHERE id = $1", [id]).then(() => {
+    res.json({
+      message: "Tâche à été supprimée",
+    });
   });
 });
 
