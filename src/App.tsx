@@ -11,14 +11,13 @@ export default function App() {
   const [health, setHealth] = useState<string | null>("");
   const [editId, setEditId] = useState<number | null>(null);
 
- function refresh() {
+  function refresh() {
     fetch("http://localhost:3000/taches")
       .then((res) => res.json())
       .then((data) => setTaches(data));
   }
   function ajouter() {
     // if (texte.trim() === "") return;
-    
 
     if (editId) {
       // Mode modification → PUT
@@ -31,7 +30,7 @@ export default function App() {
         .then(() => {
           setTexte("");
           setEditId(null); // on repasse en mode "Ajouter"
-         refresh();
+          refresh();
         })
         .catch((err) => console.error(err));
     } else {
@@ -42,19 +41,17 @@ export default function App() {
         body: JSON.stringify({ designation: texte }),
       })
         .then((res) => {
-          if (!res.ok){
-          res.json().then((data) =>{
-            alert( "Erreur: " + data.message);
-          });
-        }
+          if (!res.ok) {
+            res.json().then((data) => {
+              alert("Erreur: " + data.message);
+            });
+          }
           return res.json();
         })
         .then(() => {
           setTexte("");
           refresh();
-        })
-       
-        
+        });
     }
   }
 
@@ -81,18 +78,18 @@ export default function App() {
     refresh(); //TODO: à revoir
   }
 
-   useEffect(() => {
+  useEffect(() => {
     init();
-  }, []); 
-
- 
+  }, []);
 
   return (
     <div>
       <h1>Gestion des tâches</h1>
       <p>{health}</p>
       <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-      <button onClick={() => ajouter()}>{editId ? "Valider" : "Ajouter"}</button>
+      <button onClick={() => ajouter()}>
+        {editId ? "Valider" : "Ajouter"}
+      </button>
       <ul>
         {taches.map((t) => (
           <li key={t.id}>

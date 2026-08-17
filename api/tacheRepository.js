@@ -1,39 +1,36 @@
-import {Router} from "express";
+import { Router } from "express";
 import { query } from "./db.js";
 const router = Router();
-let taches = [{ id: 1, titre: "Tâche 1" }];
+let taches = [{ id: 1, designation: "Tâche 1" }];
 
 // Récupérer toutes les tâches
 router.get("/", (req, res) => {
- query("SELECT * FROM taches").then((result) => {
+  query("SELECT * FROM taches").then((result) => {
     res.json(result.rows);
- })
-
+  });
 });
-// Ajouter une tâche
-router.post("/taches", (req, res) => {
 
-  const { designation } = req.body;
+// Ajouter une tâche
+router.post("/", (req, res) => {
+  console.log(req.body);
+  const { designation: designation } = req.body;
 
   if (!designation || designation.trim() === "") {
     return res.status(400).json({
       message: "La designation est obligatoire",
-    
     });
   }
 
-  const nouvelleTache = {
-    id: prochainId++,
-    designation,
-  };
-
-  taches.push(nouvelleTache);
-
-  res.status(201).json(nouvelleTache);
+  query("INSERT INTO taches (designation) VALUES ($1)", [designation]).then(
+    (result) => {
+      res.json(result.rows);
+    },
+  );
+  //   res.status(201).json({message: "Tâche ajoutée avec succès"});
 });
 
 // Modifier une tâche existante
-router.put("/", (req, res) => {
+router.put("/:id", (req, res) => {
   const id = Number(req.params.id);
   const { designation } = req.body;
 
@@ -43,27 +40,24 @@ router.put("/", (req, res) => {
     });
   }
 
-  const tache = taches.find((t) => t.id === id);
-
-  if (!tache) {
-    return res.status(404).json({
-      message: "Tâche non trouvée",
+  query("UPDATE taches SET designation = $1 WHERE id = $2", [
+    designation,
+    id,
+  ]).then(() => {
+    res.json({
+      message: "Tâche à été modifiée",
     });
-  }
-
-  tache.designation = designation  ;
-
-  res.json(tache);
+  });
 });
 
 // Supprimer une tâche
-router.delete("/", (req, res) => {
+router.delete("/:id", (req, res) => {
   const id = Number(req.params.id);
 
-  taches = taches.filter((t) => t.id !== id);
-
-  res.json({
-    message: "Tâche à été supprimée",
+  query("DELETE FROM taches WHERE id = $1", [id]).then(() => {
+    res.json({
+      message: "Tâche à été supprimée",
+    });
   });
 });
 export default router;
