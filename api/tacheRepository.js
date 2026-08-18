@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { query } from "./db.js";
 const router = Router();
+import { prisma } from "./prisma.js";
 
 // Récupérer toutes les tâches
-router.get("/", (req, res) => {
-  query("SELECT * FROM taches").then((result) => {
-    res.json(result.rows);
-  });
+router.get("/", async (req, res) => {
+  const taches = await prisma.taches.findMany();
+  res.json(taches);
 });
 
 // Ajouter une tâche
@@ -20,15 +19,17 @@ router.post("/", (req, res) => {
     });
   }
 
-  query("INSERT INTO taches (designation) VALUES ($1)", [designation]).then(
-    (result) => {
-      res.json(result.rows);
-    },
-  );
-
-  // res.status(201).json({
-  //   message: "Tâche à été ajoutée",
-  // });
+  prisma.taches
+    .create({
+      data: {
+        designation: designation,
+      },
+    })
+    .then((result) => {
+      res.json({
+        message: "Tâche à été ajoutée",
+      });
+    });
 });
 
 // Modifier une tâche existante
@@ -42,25 +43,31 @@ router.put("/:id", (req, res) => {
     });
   }
 
-  query("UPDATE taches SET designation = $1 WHERE id = $2", [
-    designation,
-    id,
-  ]).then((result) => {
-    res.json({
-      message: "Tâche à été modifiée",
+  prisma.taches
+    .update({
+      where: { id: id },
+      data: { designation: designation },
+    })
+    .then((result) => {
+      res.json({
+        message: "Tâche à été modifiée",
+      });
     });
-  });
 });
 
 // Supprimer une tâche
 router.delete("/:id", (req, res) => {
   const id = Number(req.params.id);
 
-  query("DELETE FROM taches WHERE id = $1", [id]).then(() => {
-    res.json({
-      message: "Tâche à été supprimée",
+  prisma.taches
+    .delete({
+      where: { id: id },
+    })
+    .then((result) => {
+      res.json({
+        message: "Tâche à été supprimée",
+      });
     });
-  });
 });
 
 export default router;
