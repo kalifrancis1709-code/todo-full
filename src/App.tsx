@@ -94,7 +94,7 @@ export default function App() {
         {editId ? "Valider" : "Ajouter"}
       </button>
       <ul>
-        {taches.map((t: Tache) => (
+        {taches.map((t) => (
           <li key={t.id}>
             {t.designation}
             <button onClick={() => modifier(t.id)}>modifier</button>
