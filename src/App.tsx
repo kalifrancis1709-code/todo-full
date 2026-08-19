@@ -25,7 +25,7 @@ export default function App() {
       fetch(`http://localhost:3000/taches/${editId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titre: texte }),
+        body: JSON.stringify({ designation: texte }),
       })
         .then((res) => res.json())
         .then(() => {
@@ -39,7 +39,7 @@ export default function App() {
       fetch("http://localhost:3000/taches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: 3, titre: texte }),
+        body: JSON.stringify({ designation: texte }),
       })
         .then((res) => {
           if (!res.ok) {
