@@ -1,0 +1,13 @@
+
+C:\Users\martin.BRAIN-ITEK\codes\todo-full\api-v2\src\tasks\entities\task.entity.ts
+   5:3  error  Delete `··`                     prettier/prettier
+   6:1  error  Delete `··`                     prettier/prettier
+   8:3  error  Delete `··`                     prettier/prettier
+   9:1  error  Delete `··`                     prettier/prettier
+  11:3  error  Delete `··`                     prettier/prettier
+  12:1  error  Replace `········` with `····`  prettier/prettier
+  13:1  error  Delete `··`                     prettier/prettier
+
+✖ 7 problems (7 errors, 0 warnings)
+  7 errors and 0 warnings potentially fixable with the `--fix` option.
+
