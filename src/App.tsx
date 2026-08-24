@@ -56,11 +56,20 @@ export default function App() {
     }
   }
 
+<<<<<<< HEAD
   function modifier(id: number) {
     const tacheAModifier = taches.find((t) => t.id === id);
     if (!tacheAModifier) return;
     setTexte(tacheAModifier.designation);
     setEditId(id);
+=======
+  function modifier(idRecu: number) {
+    const tacheAModifier = taches.find((t) => t.id === idRecu);
+
+    if (!tacheAModifier) return;
+    setTexte(tacheAModifier.designation);
+    setEditId(idRecu);
+>>>>>>> main
   }
 
   function supprimer(id: number) {
@@ -77,7 +86,11 @@ export default function App() {
       .then((data) => setHealth(data))
       .catch((err) => console.error(err));
 
+<<<<<<< HEAD
     refresh(); // TODO: à revoir
+=======
+    refresh(); //TODO: à revoir
+>>>>>>> main
   }
 
   useEffect(() => {
