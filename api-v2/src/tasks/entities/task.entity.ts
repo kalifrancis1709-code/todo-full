@@ -1,14 +1,14 @@
-<<<<<<< HEAD
-export class Task {}
-=======
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Task {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({notNull: true})
-    designation: string;
+  @Column()
+  designation: string;
+
+  constructor(designation: string) {
+    this.designation = designation;
+  }
 }
->>>>>>> main

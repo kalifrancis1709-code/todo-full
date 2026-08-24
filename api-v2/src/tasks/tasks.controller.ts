@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   Controller,
   Get,
@@ -8,9 +7,6 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-=======
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
->>>>>>> main
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -21,11 +17,7 @@ export class TasksController {
 
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
-<<<<<<< HEAD
-    console.log('createTaskDto', createTaskDto);
-=======
     console.log('createTaskDto: ', createTaskDto);
->>>>>>> main
     return this.tasksService.create(createTaskDto);
   }
 
