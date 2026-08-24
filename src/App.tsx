@@ -21,9 +21,9 @@ export default function App() {
     // if (texte.trim() === "") return;
 
     if (editId) {
-      // Mode modification → PUT
+      // Mode modification → PATCH
       fetch(`http://localhost:3000/taches/${editId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ designation: texte }),
       })
