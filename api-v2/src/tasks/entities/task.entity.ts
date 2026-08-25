@@ -1,14 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Task { 
-    @PrimaryGeneratedColumn() 
-    id: number;
+export class Task {
+  @PrimaryGeneratedColumn()
+  id?: number;
 
-    @Column()
-    designation: string; 
+  @Column()
+  designation: string;
 
-    constructor(designation: string) {
-        this.designation = designation;
-    }
+  constructor(designation: string) {
+    this.designation = designation;
+  }
 }
