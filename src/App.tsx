@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Dashboard from "./layouts/Dashboard";
+import "./App.css";
 
 interface Tache {
   id: number;
@@ -8,7 +10,6 @@ interface Tache {
 export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
-  const [health, setHealth] = useState<string | null>("");
   const [editId, setEditId] = useState<number | null>(null);
 
   function refresh() {
@@ -21,9 +22,9 @@ export default function App() {
     // if (texte.trim() === "") return;
 
     if (editId) {
-      // Mode modification → PUT
+      // Mode modification → PATCH
       fetch(`http://localhost:3000/taches/${editId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ designation: texte }),
       })
@@ -56,11 +57,12 @@ export default function App() {
     }
   }
 
-  function modifier(id: number) {
-    const tacheAModifier = taches.find((t) => t.id === id);
+  function modifier(idRecu: number) {
+    const tacheAModifier = taches.find((t) => t.id === idRecu);
+
     if (!tacheAModifier) return;
     setTexte(tacheAModifier.designation);
-    setEditId(id);
+    setEditId(idRecu);
   }
 
   function supprimer(id: number) {
@@ -77,7 +79,7 @@ export default function App() {
       .then((data) => setHealth(data))
       .catch((err) => console.error(err));
 
-    refresh(); // TODO: à revoir
+    refresh(); //TODO: à revoir
   }
 
   useEffect(() => {
@@ -85,23 +87,34 @@ export default function App() {
   }, []);
 
   return (
-    <div>
-      <h1>Gestion des tâches</h1>
+    // <div>
+    //   <h1>Gestion des tâches</h1>
+    //   <p>{health}</p>
+    //   <input value={texte} onChange={(e) => setTexte(e.target.value)} />
+    //   <button onClick={() => ajouter()}>
+    //     {editId ? "Valider" : "Ajouter"}
+    //   </button>
 
-      <p>{health}</p>
-      <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-      <button onClick={() => ajouter()}>
-        {editId ? "Valider" : "Ajouter"}
-      </button>
-      <ul>
-        {taches.map((t) => (
-          <li key={t.id}>
-            {t.designation}
-            <button onClick={() => modifier(t.id)}>modifier</button>
-            <button onClick={() => supprimer(t.id)}>X</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    // </div>
+    // <div>
+    //   <h1>Gestion des tâches</h1>
+    //   <p>{health}</p>
+    //   <input value={texte} onChange={(e) => setTexte(e.target.value)} />
+    //   <button onClick={() => ajouter()}>
+    //     {editId ? "Valider" : "Ajouter"}
+    //   </button>
+    //   <ul>
+    //     {taches.map((t) => (
+    //       <li key={t.id}>
+    //         {t.designation}
+    //         <button onClick={() => modifier(t.id)}>modifier</button>
+    //         <button onClick={() => supprimer(t.id)}>X</button>
+    //       </li>
+    //     ))}
+    //   </ul>
+    // </div>
+    <>
+      <Dashboard />
+    </>
   );
 }
