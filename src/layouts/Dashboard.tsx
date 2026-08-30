@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import logo from "../assets/react.svg";
 
 interface Tache {
@@ -7,12 +8,6 @@ interface Tache {
 
 export default function Dashboard() {
   const [taches, setTaches] = useState<Tache[]>([]);
-
-  function refresh() {
-    fetch("http://localhost:3000/taches")
-      .then((res) => res.json())
-      .then((data) => setTaches(data));
-  }
 
   function modifier(idRecu: number) {
     const tacheAModifier = taches.find((t) => t.id === idRecu);
@@ -32,9 +27,16 @@ export default function Dashboard() {
     refresh(); //TODO: à revoir
   }
 
+  function refresh() {
+    fetch("http://localhost:3000/taches")
+      .then((res) => res.json())
+      .then((data) => setTaches(data));
+  }
+
   useEffect(() => {
     init();
   }, []);
+
   return (
     <div className="main">
       <div className="colonne1">
@@ -42,16 +44,16 @@ export default function Dashboard() {
           <img src={logo} alt="Logo" />
           <span className="app-name">TODO</span>
         </div>
-
         <div className="side-menu">
           <ul className="menu-list">
-            <li className="menu-item">Liste des tâches</li>
+            <li className="menu-item">Liste de tâches</li>
             <li className="menu-item">Créer une tâche</li>
           </ul>
         </div>
       </div>
+
       <div className="colonne2">
-        <div className="menubar">3</div>
+        <div className="menu-bar">3</div>
         <div className="main-content">
           <h1>Liste des tâches</h1>
           <div>
