@@ -9,12 +9,9 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-<<<<<<< HEAD
-=======
 
   @Get('health')
   getHealth(): string {
     return this.appService.getHealth();
   }
->>>>>>> frank-nest
 }

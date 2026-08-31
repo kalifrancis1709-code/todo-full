@@ -3,17 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-<<<<<<< HEAD
-
-@Module({
-  imports: [],
-=======
 import { TasksModule } from './tasks/tasks.module';
-<<<<<<< HEAD
-import { LoggerMiddleware } from './comon/middlewares/logger/logger.middleware';
-=======
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
->>>>>>> main
 
 @Module({
   imports: [
@@ -40,9 +31,5 @@ import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware'
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
-<<<<<<< HEAD
-    // Configuration logic here
-=======
->>>>>>> main
   }
 }
