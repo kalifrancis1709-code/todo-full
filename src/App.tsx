@@ -11,6 +11,7 @@ export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
   const [editId, setEditId] = useState<number | null>(null);
+  const [health, setHealth] = useState<string>("");
 
   function refresh() {
     fetch("http://localhost:3000/taches")
