@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import Dashboard from "./layouts/Dashboard";
 import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import TachesList from "./pages/TachesList";
+import TachesForm from "./pages/TachesForm";
 
 interface Tache {
   id: number;
@@ -11,11 +14,7 @@ export default function App() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [texte, setTexte] = useState("");
   const [editId, setEditId] = useState<number | null>(null);
-<<<<<<< HEAD
-  const [health, setHealth] = useState("");
-=======
   const [health, setHealth] = useState<string>("");
->>>>>>> main
 
   function refresh() {
     fetch("http://localhost:3000/taches")
@@ -92,34 +91,14 @@ export default function App() {
   }, []);
 
   return (
-    // <div>
-    //   <h1>Gestion des tâches</h1>
-    //   <p>{health}</p>
-    //   <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-    //   <button onClick={() => ajouter()}>
-    //     {editId ? "Valider" : "Ajouter"}
-    //   </button>
-
-    // </div>
-    // <div>
-    //   <h1>Gestion des tâches</h1>
-    //   <p>{health}</p>
-    //   <input value={texte} onChange={(e) => setTexte(e.target.value)} />
-    //   <button onClick={() => ajouter()}>
-    //     {editId ? "Valider" : "Ajouter"}
-    //   </button>
-    //   <ul>
-    //     {taches.map((t) => (
-    //       <li key={t.id}>
-    //         {t.designation}
-    //         <button onClick={() => modifier(t.id)}>modifier</button>
-    //         <button onClick={() => supprimer(t.id)}>X</button>
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
     <>
-      <Dashboard />
+      <Routes>
+        <Route path="/" element={<Dashboard />}>
+          <Route path="taches" element={<TachesList />} />
+          <Route path="/taches/form" element={<TachesForm />} />
+          <Route path="/taches/form/:id" element={<TachesForm />} />
+        </Route>
+      </Routes>
     </>
   );
 }
