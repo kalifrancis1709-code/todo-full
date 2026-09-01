@@ -9,7 +9,6 @@ interface Tache {
 export default function Dashboard() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const [designation, setDesignation] = useState("");
-  const [texte, setTexte] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [page, setPage] = useState("liste");
 
@@ -36,13 +35,15 @@ export default function Dashboard() {
   }
 
   function modifier(idRecu: number) {
+    console.log("modifier :" + idRecu);
     const tacheAModifier = taches.find((t) => t.id === idRecu);
 
     if (!tacheAModifier) return;
 
     setDesignation(tacheAModifier.designation);
     setEditId(tacheAModifier.id);
-    setTexte(true);
+    setPage("creation");
+    refresh();
   }
 
   function valider() {
@@ -61,15 +62,13 @@ export default function Dashboard() {
     }).then(() => {
       setDesignation("");
       setEditId(null);
-      setTexte(false);
-      refresh();
+      setPage("liste");
     });
   }
 
   function annulerModification() {
     setDesignation("");
     setEditId(null);
-    setTexte(false);
   }
 
   function supprimer(id: number) {
@@ -107,7 +106,6 @@ export default function Dashboard() {
               className="menu-item"
               onClick={() => {
                 setPage("liste");
-                setTexte(false);
               }}
             >
               📋Liste de tâches
@@ -115,8 +113,8 @@ export default function Dashboard() {
             <li
               className="menu-item"
               onClick={() => {
+                setEditId(null);
                 setPage("creation");
-                setTexte(false);
                 setDesignation("");
               }}
             >
@@ -129,7 +127,7 @@ export default function Dashboard() {
       <div className="colonne2">
         <div className="menu-bar">3</div>
         <div className="main-content">
-          {page === "liste" && !texte && (
+          {page === "liste" && (
             <div>
               <h1>Liste des tâches</h1>
               <table>
@@ -159,7 +157,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {page === "creation" && (
+          {page === "creation" && !editId && (
             <div className="editor">
               <h1>Créer une tâche</h1>
 
@@ -173,7 +171,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {texte && (
+          {page === "creation" && editId && (
             <div className="editor">
               <h1>Modifier la tâches</h1>
 
