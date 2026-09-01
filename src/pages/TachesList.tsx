@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
-import type { Tache } from "../Interfaces/Tache";
+import type { Tache } from "../interfaces/Tache";
 
 export default function TachesList() {
   const [taches, setTaches] = useState<Tache[]>([]);
+
+  function modifier(idRecu: number) {
+    console.log("modifier :" + idRecu);
+    const tacheAModifier = taches.find((t) => t.id === idRecu);
+
+    if (!tacheAModifier) return;
+  }
 
   function init() {
     refresh(); //TODO: à revoir
@@ -14,17 +21,6 @@ export default function TachesList() {
       .then((data) => setTaches(data));
   }
 
-  useEffect(() => {
-    init();
-  }, []);
-
-  function modifier(idRecu: number) {
-    console.log("modifier :" + idRecu);
-    const tacheAModifier = taches.find((t) => t.id === idRecu);
-
-    if (!tacheAModifier) return;
-  }
-
   function supprimer(id: number) {
     fetch(`http://localhost:3000/taches/${id}`, {
       method: "DELETE",
@@ -32,6 +28,10 @@ export default function TachesList() {
       .then(() => refresh())
       .catch((err) => console.error(err));
   }
+
+  useEffect(() => {
+    init();
+  }, []);
 
   return (
     <div>
@@ -49,7 +49,9 @@ export default function TachesList() {
           {taches.map((t, index) => (
             <tr key={t.id}>
               <td>{index + 1}</td>
-              <td>{t.designation}</td>
+              <td>
+                {t.designation} -- {t.id}
+              </td>
               <td>
                 <button onClick={() => modifier(t.id)}>✍️modifier</button>
                 <button onClick={() => supprimer(t.id)}>🗑️</button>

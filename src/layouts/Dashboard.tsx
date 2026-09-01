@@ -14,14 +14,7 @@ export default function Dashboard() {
             <li className="menu-item" onClick={() => {}}>
               📋Liste de tâches
             </li>
-            <li
-              className="menu-item"
-              onClick={() => {
-                setEditId(null);
-                setPage("creation");
-                setDesignation("");
-              }}
-            >
+            <li className="menu-item" onClick={() => {}}>
               🆕Créer une tâche
             </li>
           </ul>
