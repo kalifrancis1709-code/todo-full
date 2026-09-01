@@ -94,15 +94,9 @@ export default function App() {
     <>
       <Routes>
         <Route path="/" element={<Dashboard />}>
-<<<<<<< HEAD
-          <Route path="taches" element={<TachesList />} />
-          <Route path="/taches/form" element={<TachesForm />} />
-          <Route path="/taches/form/:id" element={<TachesForm />} />
-=======
           <Route path="/taches" element={<TachesList />}></Route>
           <Route path="/taches/form" element={<TachesForm />}></Route>
           <Route path="/taches/form/:id" element={<TachesForm />}></Route>
->>>>>>> main
         </Route>
       </Routes>
     </>

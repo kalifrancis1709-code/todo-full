@@ -22,11 +22,7 @@ export class TasksService {
   async findOne(id: number) {
     const task = await this.taskRepository.findOneBy({ id });
     if (!task) {
-<<<<<<< HEAD
-      throw new Error(`Task with ID ${id} not found`);
-=======
       throw new NotFoundException(`Task #${id} not found`);
->>>>>>> main
     }
     return task;
   }
