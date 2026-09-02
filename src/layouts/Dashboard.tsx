@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import logo from "../assets/react.svg";
 
 export default function Dashboard() {
@@ -11,11 +11,11 @@ export default function Dashboard() {
         </div>
         <div className="side-menu">
           <ul className="menu-list">
-            <li className="menu-item" onClick={() => {}}>
-              📋Liste de tâches
+            <li className="menu-item">
+              <Link to="/taches">📋Liste de tâches</Link>
             </li>
-            <li className="menu-item" onClick={() => {}}>
-              🆕Créer une tâche
+            <li className="menu-item">
+              <Link to="/taches/form">🆕Créer une tâche</Link>
             </li>
           </ul>
         </div>

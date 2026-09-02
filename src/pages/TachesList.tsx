@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import type { Tache } from "../interfaces/Tache";
+import { useNavigate } from "react-router-dom";
 
 export default function TachesList() {
   const [taches, setTaches] = useState<Tache[]>([]);
+  const navigate = useNavigate();
 
   function modifier(idRecu: number) {
     console.log("modifier :" + idRecu);
-    const tacheAModifier = taches.find((t) => t.id === idRecu);
-
-    if (!tacheAModifier) return;
+    navigate(`/taches/form/${idRecu}`);
   }
 
   function init() {

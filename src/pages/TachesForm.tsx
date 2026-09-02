@@ -21,6 +21,7 @@ export default function TachesForm() {
     })
       .then(() => {
         setDesignation("");
+        navigation.back();
       })
       .catch((err) => console.error(err));
   }
@@ -30,7 +31,7 @@ export default function TachesForm() {
       return;
     }
 
-    fetch(`http://localhost:3000/taches/${editId}`, {
+    fetch(`http://localhost:3000/taches/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -40,11 +41,13 @@ export default function TachesForm() {
       }),
     }).then(() => {
       setDesignation("");
+      navigation.back();
     });
   }
 
   function annulerModification() {
     setDesignation("");
+    navigation.back();
   }
 
   useEffect(() => {
@@ -72,7 +75,7 @@ export default function TachesForm() {
 
       {id && (
         <div className="editor">
-          <h1>Modifier la tâches</h1>
+          <h1>Modifier la tâche</h1>
           <input
             type="text"
             value={designation}
