@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-<<<<<<< HEAD
-export default function TacheForm() {
-=======
 export default function TachesForm() {
->>>>>>> main
   const [designation, setDesignation] = useState("");
   const { id } = useParams<{ id: string }>();
 
@@ -25,6 +21,7 @@ export default function TachesForm() {
     })
       .then(() => {
         setDesignation("");
+        navigation.back();
       })
       .catch((err) => console.error(err));
   }
@@ -34,11 +31,7 @@ export default function TachesForm() {
       return;
     }
 
-<<<<<<< HEAD
     fetch(`http://localhost:3000/taches/${id}`, {
-=======
-    fetch(`http://localhost:3000/taches/${editId}`, {
->>>>>>> main
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -48,11 +41,13 @@ export default function TachesForm() {
       }),
     }).then(() => {
       setDesignation("");
+      navigation.back();
     });
   }
 
   function annulerModification() {
     setDesignation("");
+    navigation.back();
   }
 
   useEffect(() => {
@@ -80,7 +75,7 @@ export default function TachesForm() {
 
       {id && (
         <div className="editor">
-          <h1>Modifier la tâches</h1>
+          <h1>Modifier la tâche</h1>
           <input
             type="text"
             value={designation}
