@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function TachesForm() {
   const [designation, setDesignation] = useState("");
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   function ajouter() {
     if (designation.trim() === "") {
@@ -12,16 +15,18 @@ export default function TachesForm() {
 
     fetch("http://localhost:3000/taches", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeader(),
       body: JSON.stringify({
         designation: designation,
       }),
     })
-      .then(() => {
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+          return Promise.reject("Non authentifié");
+        }
         setDesignation("");
-        navigation.back();
+        navigate(-1);
       })
       .catch((err) => console.error(err));
   }
@@ -33,24 +38,30 @@ export default function TachesForm() {
 
     fetch(`http://localhost:3000/taches/${id}`, {
       method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
+      headers: getAuthHeader(),
       body: JSON.stringify({
         designation: designation,
       }),
-    }).then(() => {
-      setDesignation("");
-      navigation.back();
-    });
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+          return Promise.reject("Non authentifié");
+        }
+        setDesignation("");
+        navigate(-1);
+      })
+      .catch((err) => console.error(err));
   }
 
   function annulerModification() {
     setDesignation("");
-    navigation.back();
+    navigate(-1);
   }
 
   useEffect(() => {
+    if (!id) return;
+
     fetch(`http://localhost:3000/taches/${id}`)
       .then((res) => res.json())
       .then((data) => {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import type { Tache } from "../interfaces/Tache";
 import { useNavigate } from "react-router-dom";
+import { getAuthHeader } from "../auth/jwt/auth";
+import type { Tache } from "../Interfaces/Tache";
 
 export default function TachesList() {
   const [taches, setTaches] = useState<Tache[]>([]);
@@ -16,16 +17,43 @@ export default function TachesList() {
   }
 
   function refresh() {
-    fetch("http://localhost:3000/taches")
-      .then((res) => res.json())
-      .then((data) => setTaches(data));
+    fetch("http://localhost:3000/taches", {
+      headers: getAuthHeader(),
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+          return Promise.reject("Non authentifié");
+        }
+        if (!res.ok) {
+          return Promise.reject(
+            `Erreur lors de la récupération des tâches:${res.status}`,
+          );
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTaches(data);
+        } else {
+          console.error("Données reçues non valides:", data);
+          setTaches([]);
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   function supprimer(id: number) {
     fetch(`http://localhost:3000/taches/${id}`, {
       method: "DELETE",
+      headers: getAuthHeader(),
     })
-      .then(() => refresh())
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+        }
+        refresh();
+      })
       .catch((err) => console.error(err));
   }
 

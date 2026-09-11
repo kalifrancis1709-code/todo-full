@@ -5,11 +5,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/jwt/auth.module';
 
 @Module({
   imports: [
     TasksModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -24,6 +27,7 @@ import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware'
         synchronize: true,
       }),
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
