@@ -1,12 +1,12 @@
 // src/auth/jwt/jwt.guard.ts
-import { Injectable, ExecutionContext } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
-import { ROLES_KEY } from './roles.decorator';
+import { Injectable, ExecutionContext } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { Reflector } from "@nestjs/core";
+import { Observable } from "rxjs";
+import { ROLES_KEY } from "./roles.decorator";
 
 @Injectable()
-export class JwtGuard extends AuthGuard('jwt') {
+export class JwtGuard extends AuthGuard("jwt") {
   constructor(private reflector: Reflector) {
     super();
   }
@@ -21,7 +21,9 @@ export class JwtGuard extends AuthGuard('jwt') {
 
     if (!requireRole) {
       return super.canActivate(context) as
-        boolean | Promise<boolean> | Observable<boolean>;
+        | boolean
+        | Promise<boolean>
+        | Observable<boolean>;
     }
 
     return super.canActivate(context) as boolean;

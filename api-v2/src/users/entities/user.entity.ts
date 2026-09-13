@@ -11,7 +11,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -25,6 +25,10 @@ export class User {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   photoUrl: string | null;
+
+  // ===== AJOUT DU RÔLE =====
+  @Column({ type: 'varchar', length: 50, default: 'user' })
+  role: string;
 
   @Column({ type: 'json', nullable: true })
   tasks: Task[];

@@ -122,3 +122,51 @@ input {
   gap: 20px;
   padding-left: 20px;
 }
+
+/* mon essai */
+
+.user-menu {
+  position: relative;
+  margin-left: auto; /* pousse le menu à droite */
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+.menu-button:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(103, 206, 40, 0.12);
+  min-width: 160px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.dropdown-menu button:hover {
+  background-color: #f5f5f5;
+}

@@ -41,12 +41,18 @@ export class AuthService {
       password: hashedPassword,
       name,
       prenom,
+      role: 'user',
     });
 
     await this.usersRepository.save(user);
 
     // Ne pas renvoyer le mot de passe
-    const payload = { sub: user.id, email: user.email };
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: 'user',
+    };
+
     return {
       access_token: this.jwtService.sign(payload),
       user: {

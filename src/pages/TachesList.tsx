@@ -7,6 +7,15 @@ export default function TachesList() {
   const [taches, setTaches] = useState<Tache[]>([]);
   const navigate = useNavigate();
 
+  function fetchTaches() {
+    fetch("http://localhost:3000/taches", {
+      headers: getAuthHeader(),
+    })
+      .then((res) => res.json())
+      .then((data) => setTaches(data))
+      .catch((err) => console.error(err));
+  }
+
   function modifier(idRecu: number) {
     console.log("modifier :" + idRecu);
     navigate(`/taches/form/${idRecu}`);
@@ -33,6 +42,7 @@ export default function TachesList() {
         return res.json();
       })
       .then((data) => {
+        console.log("Données reçues:", data);
         if (Array.isArray(data)) {
           setTaches(data);
         } else {
@@ -42,6 +52,10 @@ export default function TachesList() {
       })
       .catch((err) => console.error(err));
   }
+
+  useEffect(() => {
+    refresh();
+  }, []);
 
   function supprimer(id: number) {
     fetch(`http://localhost:3000/taches/${id}`, {

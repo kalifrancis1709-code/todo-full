@@ -14,7 +14,16 @@ export default function App() {
       <Route path="/signup" element={<Signup />}></Route>
 
       <Route path="/" element={<Dashboard />}>
-        <Route index element={<div>Bienvenue sur le tableau de bord</div>} />
+        <Route
+          index
+          element={
+            <div>
+              <h1>Bienvenue sur le tableau de bord</h1>
+
+              <p>Veillez-vous connecter pour accéder aux fonctionnalités.</p>
+            </div>
+          }
+        />
         <Route path="/profil" element={<Profil />}></Route>
         <Route path="/taches" element={<TachesList />}></Route>
         <Route path="/taches/form" element={<TachesForm />}></Route>

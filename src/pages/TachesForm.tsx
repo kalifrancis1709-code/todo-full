@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { getAuthHeader } from "../auth/jwt/auth";
 
 export default function TachesForm() {
   const [designation, setDesignation] = useState("");
@@ -15,7 +16,7 @@ export default function TachesForm() {
 
     fetch("http://localhost:3000/taches", {
       method: "POST",
-      headers: getAuthHeader(),
+      headers: { ...getAuthHeader(), "Content-Type": "application/json" },
       body: JSON.stringify({
         designation: designation,
       }),
@@ -25,8 +26,13 @@ export default function TachesForm() {
           navigate("/login");
           return Promise.reject("Non authentifié");
         }
+        if (!res.ok) {
+          return Promise.reject(
+            `Erreur lors de l'ajout de la tâche:${res.status}`,
+          );
+        }
         setDesignation("");
-        navigate(-1);
+        navigate("/taches");
       })
       .catch((err) => console.error(err));
   }
@@ -38,7 +44,7 @@ export default function TachesForm() {
 
     fetch(`http://localhost:3000/taches/${id}`, {
       method: "PATCH",
-      headers: getAuthHeader(),
+      headers: { ...getAuthHeader(), "Content-Type": "application/json" },
       body: JSON.stringify({
         designation: designation,
       }),
@@ -62,12 +68,15 @@ export default function TachesForm() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`http://localhost:3000/taches/${id}`)
+    fetch(`http://localhost:3000/taches/${id}`, {
+      headers: getAuthHeader(),
+    })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Données reçues:", data);
         setDesignation(data.designation);
-      });
+      })
+      .catch((err) => console.error(err));
   }, [id]);
 
   return (

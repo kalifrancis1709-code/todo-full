@@ -18,7 +18,8 @@ export class Task {
     message: 'La désignation ne peut pas dépasser 255 caractères',
   })
   designation: string;
-
+  @Column({ default: 'user' })
+  role: string;
   @Column({ nullable: true })
   @IsOptional()
   @IsString()

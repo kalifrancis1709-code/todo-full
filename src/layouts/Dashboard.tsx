@@ -1,7 +1,8 @@
 // src/layouts/Dashboard.tsx
 import { useState } from "react";
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import { isAuthenticated, logout } from "../auth/jwt/auth";
+import react from "../assets/react.svg"; // adapte le chemin de ton logo si besoin
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -15,53 +16,67 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="layout">
-      <nav className="navbar">
-        {/* Liens principaux à gauche */}
-        <div className="nav-left">
-          <NavLink to="/" end>
-            Accueil
-          </NavLink>
-          <NavLink to="/taches">Tâches</NavLink>
+    <div className="main">
+      {/* ===== COLONNE GAUCHE (sidebar) ===== */}
+      <div className="colonne1">
+        <div className="leading">
+          <img src={react} alt="Logo" />
+          <span className="app-name">TODO</span>
         </div>
 
-        {/* Menu utilisateur à droite (trois points) */}
-        <div className="nav-right">
-          {connected ? (
-            <div className="user-menu">
-              <button
-                className="menu-button"
-                onClick={() => setMenuOpen(!menuOpen)}
-              >
-                ⋮
-              </button>
-
-              {menuOpen && (
-                <div className="dropdown-menu">
-                  <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      navigate("/profil");
-                    }}
-                  >
-                    Mon Profil
-                  </button>
-                  <button onClick={handleLogout}>Déconnexion</button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <NavLink to="/login">Connexion</NavLink>
-              <NavLink to="/signup">Inscription</NavLink>
-            </>
-          )}
+        <div className="side-menu">
+          <ul className="menu-list">
+            <li className="menu-item">
+              <Link to="/taches">📋 Liste de tâches</Link>
+            </li>
+            <li className="menu-item">
+              <Link to="/taches/form">🆕 Créer une tâche</Link>
+            </li>
+          </ul>
         </div>
-      </nav>
+      </div>
 
-      <main>
-        <Outlet />
-      </main>
+      {/* ===== COLONNE DROITE ===== */}
+      <div className="colonne2">
+        <div className="menu-bar">
+          {/* Menu utilisateur (trois points) */}
+          <div className="user-menu">
+            {connected ? (
+              <>
+                <button
+                  className="menu-button"
+                  onClick={() => setMenuOpen(!menuOpen)}
+                >
+                  ⋮
+                </button>
+
+                {menuOpen && (
+                  <div className="dropdown-menu">
+                    <button
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate("/profil");
+                      }}
+                    >
+                      Mon Profil
+                    </button>
+                    <button onClick={handleLogout}>Déconnexion</button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div>
+                <button onClick={() => navigate("/login")}>Connexion</button>
+                <button onClick={() => navigate("/signup")}>Inscription</button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="main-content">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 }
