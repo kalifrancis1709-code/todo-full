@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
+
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getAuthHeader } from "../auth/jwt/auth";
 
 export default function TachesForm() {
   const [designation, setDesignation] = useState("");
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   function ajouter() {
     if (designation.trim() === "") {
@@ -12,16 +16,23 @@ export default function TachesForm() {
 
     fetch("http://localhost:3000/taches", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { ...getAuthHeader(), "Content-Type": "application/json" },
       body: JSON.stringify({
         designation: designation,
       }),
     })
-      .then(() => {
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+          return Promise.reject("Non authentifié");
+        }
+        if (!res.ok) {
+          return Promise.reject(
+            `Erreur lors de l'ajout de la tâche:${res.status}`,
+          );
+        }
         setDesignation("");
-        navigation.back();
+        navigate("/taches");
       })
       .catch((err) => console.error(err));
   }
@@ -33,30 +44,39 @@ export default function TachesForm() {
 
     fetch(`http://localhost:3000/taches/${id}`, {
       method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
+      headers: { ...getAuthHeader(), "Content-Type": "application/json" },
       body: JSON.stringify({
         designation: designation,
       }),
-    }).then(() => {
-      setDesignation("");
-      navigation.back();
-    });
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          navigate("/login");
+          return Promise.reject("Non authentifié");
+        }
+        setDesignation("");
+        navigate(-1);
+      })
+      .catch((err) => console.error(err));
   }
 
   function annulerModification() {
     setDesignation("");
-    navigation.back();
+    navigate(-1);
   }
 
   useEffect(() => {
-    fetch(`http://localhost:3000/taches/${id}`)
+    if (!id) return;
+
+    fetch(`http://localhost:3000/taches/${id}`, {
+      headers: getAuthHeader(),
+    })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Données reçues:", data);
         setDesignation(data.designation);
-      });
+      })
+      .catch((err) => console.error(err));
   }, [id]);
 
   return (

@@ -27,11 +27,13 @@ export class TasksService {
     return task;
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return this.taskRepository.update(id, updateTaskDto);
+  async update(id: number, updateTaskDto: UpdateTaskDto) {
+    const task = await this.findOne(id);
+    return this.taskRepository.save({ ...task, ...updateTaskDto });
   }
 
-  remove(id: number) {
-    return this.taskRepository.delete(id);
+  async remove(id: number) {
+    const task = await this.findOne(id);
+    return this.taskRepository.remove(task);
   }
 }
