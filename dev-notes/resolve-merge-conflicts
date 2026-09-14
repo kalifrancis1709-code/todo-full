@@ -1,0 +1,24 @@
+You can set a merge strategy option so git auto-resolves conflicts in favor of the incoming branch, with no manual step:
+
+bash
+git merge -X theirs main
+To make this the default for all future merges in this repo, add it to your git config:
+
+bash
+git config merge.ours.driver true   # not needed for this, ignore
+git config pull.rebase false
+git config merge.strategy recursive
+git config merge.strategyOption theirs
+Actually, the cleanest way to bake it in permanently is a repo-level alias:
+
+bash
+git config alias.mergetheirs '!git merge -X theirs'
+
+Then just run git mergetheirs main instead of git merge main.
+
+Or, if you want git merge itself (no custom command) to always behave this way, add this to .git/config:
+
+ini
+[merge]
+    ours = false
+    strategyOption = theirs

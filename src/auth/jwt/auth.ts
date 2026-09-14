@@ -1,4 +1,4 @@
-const TOKEN_KEY = "token";
+const TOKEN_KEY = "access_token";
 
 export function login(token: string): void {
   localStorage.setItem(TOKEN_KEY, token);

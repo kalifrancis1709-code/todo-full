@@ -1,33 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { IsEmail, IsString, MinLength, IsOptional } from 'class-validator';
-
-class RegisterDto {
-  @IsEmail({}, { message: 'Email invalide' })
-  email: string;
-
-  @IsString()
-  @MinLength(6, {
-    message: 'Le mot de passe doit contenir au moins 6 caractères',
-  })
-  password: string;
-
-  @IsOptional()
-  @IsString()
-  name?: string;
-
-  @IsOptional()
-  @IsString()
-  prenom?: string;
-}
-
-class LoginDto {
-  @IsEmail({}, { message: 'Email invalide' })
-  email: string;
-
-  @IsString()
-  password: string;
-}
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
