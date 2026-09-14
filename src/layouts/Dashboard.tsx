@@ -22,7 +22,10 @@ export default function Dashboard() {
       </div>
 
       <div className="colonne2">
-        <div className="menu-bar">3</div>
+        <div className="menu-bar">
+          <button>Inscription</button>
+          <button>Connexion</button>
+        </div>
         <div className="main-content">
           <Outlet />
         </div>

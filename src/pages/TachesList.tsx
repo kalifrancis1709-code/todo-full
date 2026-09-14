@@ -34,7 +34,7 @@ export default function TachesList() {
   }, []);
 
   return (
-    <div>
+    <div className="page-main">
       <h1>Liste des tâches</h1>
       <table>
         <thead>
@@ -53,8 +53,10 @@ export default function TachesList() {
                 {t.designation} -- {t.id}
               </td>
               <td>
-                <button onClick={() => modifier(t.id)}>✍️modifier</button>
-                <button onClick={() => supprimer(t.id)}>🗑️</button>
+                <div className="actions">
+                  <button onClick={() => modifier(t.id)}>✍️modifier</button>
+                  <button onClick={() => supprimer(t.id)}>🗑️</button>
+                </div>
               </td>
             </tr>
           ))}
