@@ -1,7 +1,11 @@
-const TOKEN_KEY = "access_token";
+import type { User } from "../../Interfaces/User";
 
-export function login(token: string): void {
+const TOKEN_KEY = "access_token";
+const USER_KEY = "user";
+
+export function login(token: string, user: User): void {
   localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function setToken(token: string): void {
@@ -10,6 +14,7 @@ export function setToken(token: string): void {
 
 export function logout(): void {
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
 }
 
 export function getToken(): string | null {
@@ -17,7 +22,9 @@ export function getToken(): string | null {
 }
 
 export function isAuthenticated(): boolean {
-  return !!getToken();
+  const isAuthenticated = !!getToken();
+  console.log("Est connecté", isAuthenticated);
+  return isAuthenticated;
 }
 
 export function getAuthHeader(): Record<string, string> {

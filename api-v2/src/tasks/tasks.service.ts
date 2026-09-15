@@ -7,12 +7,22 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
+  findByUser(id: number) {
+    return this.taskRepository.find({
+      where: { user: { id } },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
-  create(createTaskDto: CreateTaskDto) {
-    return this.taskRepository.save(createTaskDto);
+  create(createTaskDto: CreateTaskDto, userId: number) {
+    return this.taskRepository.save({
+      ...createTaskDto,
+      user: { id: userId },
+    });
   }
 
   findAll() {

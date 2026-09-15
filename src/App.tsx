@@ -10,10 +10,9 @@ import Profil from "./layouts/Profil";
 export default function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />}></Route>
-      <Route path="/signup" element={<Signup />}></Route>
-
-      <Route path="/" element={<Dashboard />}>
+      <Route path="" element={<Dashboard />}>
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
         <Route
           index
           element={

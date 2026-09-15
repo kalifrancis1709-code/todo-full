@@ -11,6 +11,7 @@ body {
   justify-content: start;
   width: 100%;
   min-height: 100vh;
+  width: 100vw;
 }
 
 .colonne1 {
@@ -22,6 +23,7 @@ body {
 .colonne2 {
   width: 80%;
   min-height: 100%;
+  flex-grow: 1;
 }
 
 .leading {

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Task } from 'src/tasks/entities/task.entity';
@@ -30,7 +31,7 @@ export class User {
   @Column({ type: 'varchar', length: 50, default: 'user' })
   role: string;
 
-  @Column({ type: 'json', nullable: true })
+  @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
 
   @CreateDateColumn()

@@ -1,8 +1,8 @@
 // src/layouts/Dashboard.tsx
-import { useState } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { isAuthenticated, logout } from "../auth/jwt/auth";
 import react from "../assets/react.svg"; // adapte le chemin de ton logo si besoin
+import { useState } from "react";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -18,24 +18,25 @@ export default function Dashboard() {
   return (
     <div className="main">
       {/* ===== COLONNE GAUCHE (sidebar) ===== */}
-      <div className="colonne1">
-        <div className="leading">
-          <img src={react} alt="Logo" />
-          <span className="app-name">TODO</span>
-        </div>
+      {connected && (
+        <div className="colonne1">
+          <div className="leading">
+            <img src={react} alt="Logo" />
+            <span className="app-name">TODO</span>
+          </div>
 
-        <div className="side-menu">
-          <ul className="menu-list">
-            <li className="menu-item">
-              <Link to="/taches">📋 Liste de tâches</Link>
-            </li>
-            <li className="menu-item">
-              <Link to="/taches/form">🆕 Créer une tâche</Link>
-            </li>
-          </ul>
+          <div className="side-menu">
+            <ul className="menu-list">
+              <li className="menu-item">
+                <Link to="/taches">📋 Liste de tâches</Link>
+              </li>
+              <li className="menu-item">
+                <Link to="/taches/form">🆕 Créer une tâche</Link>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-
+      )}
       {/* ===== COLONNE DROITE ===== */}
       <div className="colonne2">
         <div className="menu-bar">
@@ -60,7 +61,7 @@ export default function Dashboard() {
                     >
                       Mon Profil
                     </button>
-                    <button onClick={handleLogout}>Déconnexion</button>
+                    <button onClick={() => handleLogout()}>Déconnexion</button>
                   </div>
                 )}
               </>

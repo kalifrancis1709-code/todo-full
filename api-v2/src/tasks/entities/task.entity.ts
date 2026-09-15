@@ -3,8 +3,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  ManyToOne,
 } from 'typeorm';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class Task {
@@ -18,19 +20,14 @@ export class Task {
     message: 'La désignation ne peut pas dépasser 255 caractères',
   })
   designation: string;
-  @Column({ default: 'user' })
-  role: string;
-  @Column({ nullable: true })
-  @IsOptional()
-  @IsString()
-  @MaxLength(50, { message: 'Le nom ne peut pas dépasser 50 caractères' })
-  nom?: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
-  constructor(designation: string, nom?: string) {
+  @ManyToOne(() => User, (user) => user.tasks)
+  user: User;
+
+  constructor(designation: string) {
     this.designation = designation;
-    this.nom = nom;
   }
 }

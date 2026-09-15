@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { login } from "../auth/jwt/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -33,8 +34,7 @@ export default function Login() {
       }
 
       // Sauvegarde du token et des infos utilisateur
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("access_token", data.access_token);
+      login(data.access_token, data.user);
 
       // Redirection vers la page des tâches
       navigate("/taches");
